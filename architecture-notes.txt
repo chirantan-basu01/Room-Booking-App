@@ -1,0 +1,276 @@
+================================================================================
+                        ROOM BOOKING APP - ARCHITECTURE NOTES
+================================================================================
+
+1. PROJECT STRUCTURE
+================================================================================
+
+The app follows a feature-based clean architecture pattern:
+
+lib/
+├── core/                    # Shared utilities, theme, widgets
+│   ├── constants/           # App-wide constants
+│   ├── errors/              # Error handling classes
+│   ├── theme/               # Colors, text styles, theme data
+│   ├── utils/               # Validators, date utilities
+│   └── widgets/             # Reusable UI components
+├── features/                # Feature modules
+│   ├── auth/                # Authentication feature
+│   │   ├── data/            # Data sources, repositories
+│   │   ├── domain/          # Models
+│   │   └── presentation/    # Screens, providers, widgets
+│   ├── bookings/            # Booking management feature
+│   │   ├── data/
+│   │   ├── domain/
+│   │   └── presentation/
+│   └── rooms/               # Room browsing feature
+│       ├── data/
+│       ├── domain/
+│       └── presentation/
+├── routes/                  # Navigation configuration
+└── main.dart                # App entry point
+
+Each feature is self-contained with its own:
+- Data layer (datasources, repositories)
+- Domain layer (models)
+- Presentation layer (screens, providers, widgets)
+
+
+2. STATE MANAGEMENT
+================================================================================
+
+The app uses Riverpod for state management.
+
+Why Riverpod:
+- Compile-time safety
+- No BuildContext dependency for accessing state
+- Built-in support for async operations
+- Easy testing and dependency injection
+- Automatic disposal of unused providers
+
+Provider Types Used:
+
+a) StateNotifierProvider - For complex state with multiple fields
+   Example: AuthStateProvider, BookingFormProvider
+
+   class AuthStateNotifier extends StateNotifier<AuthState> {
+     // Manages user authentication state
+     // Handles login, logout, session persistence
+   }
+
+b) FutureProvider - For async data fetching
+   Example: roomsProvider, userBookingsProvider
+
+   final roomsProvider = FutureProvider<List<RoomModel>>((ref) {
+     return ref.read(roomRepositoryProvider).getRooms();
+   });
+
+c) StateProvider - For simple reactive values
+   Example: searchQueryProvider, selectedRoomTypeProvider
+
+   final searchQueryProvider = StateProvider<String>((ref) => '');
+
+d) Provider - For computed/derived values
+   Example: filteredRoomsProvider (combines rooms + search + filter)
+
+State Flow:
+User Action -> Provider Notifier -> State Update -> UI Rebuild
+
+
+3. LOADING STATES HANDLING
+================================================================================
+
+Loading states are handled at multiple levels:
+
+a) Screen Level (FutureProvider):
+   - Uses AsyncValue from Riverpod
+   - Provides .when() method for data/loading/error states
+
+   roomsAsync.when(
+     data: (rooms) => RoomList(rooms),
+     loading: () => LoadingIndicator(),
+     error: (e, st) => CustomErrorWidget(message: e.toString()),
+   )
+
+b) Action Level (StateNotifier):
+   - isLoading flag in state class
+   - Set true before async operation, false after
+
+   state = state.copyWith(isLoading: true);
+   // perform operation
+   state = state.copyWith(isLoading: false);
+
+c) UI Feedback:
+   - LoadingIndicator widget with circular progress
+   - Buttons show loading spinner when processing
+   - Disabled state during loading to prevent double-taps
+
+d) Shimmer Effects:
+   - Image placeholders while loading from network
+   - Uses CachedNetworkImage for efficient loading
+
+
+4. ERROR HANDLING - BOOKING FAILURES
+================================================================================
+
+When a booking fails, the app handles it as follows:
+
+a) Repository Level:
+   - Uses Either<Failure, Success> pattern from dartz package
+   - Catches exceptions and wraps in Failure objects
+
+   Future<Either<Failure, BookingModel>> createBooking(...) async {
+     try {
+       // booking logic
+       return Right(booking);
+     } catch (e) {
+       return Left(Failure(e.toString()));
+     }
+   }
+
+b) Provider Level:
+   - Processes Either result
+   - Updates state with error message if Left (failure)
+
+   result.fold(
+     (failure) => state = state.copyWith(error: failure.message),
+     (booking) => state = state.copyWith(isSuccess: true),
+   );
+
+c) UI Level:
+   - Error message displayed in red container
+   - User can retry the action
+   - Form remains filled so user doesn't lose input
+
+d) Validation Errors:
+   - Check-in/Check-out date validation
+   - Room availability check before booking
+   - Visual feedback for unavailable dates
+
+Error Recovery Flow:
+1. Error occurs -> State updated with error message
+2. UI shows error container with message
+3. User can modify input and retry
+4. On retry, error is cleared and operation re-attempted
+
+
+5. DATA PERSISTENCE
+================================================================================
+
+a) User Session (Hive):
+   - User data stored in Hive box after login
+   - Checked on app startup for auto-login
+   - Cleared on logout
+
+b) Bookings (Hive):
+   - All bookings stored locally
+   - Persists across app restarts
+   - Linked to user ID for filtering
+
+c) Mock Data (JSON Assets):
+   - Rooms data loaded from assets/mock/rooms.json
+   - Users data from assets/mock/users.json
+   - Simulates API response structure
+
+
+6. NAVIGATION ARCHITECTURE
+================================================================================
+
+Uses go_router for declarative navigation:
+
+Routes:
+- /splash          -> Initial loading screen
+- /login           -> Authentication
+- /dashboard       -> Main room listing
+- /rooms/:id       -> Room details
+- /booking/confirm -> Booking form
+- /bookings        -> User's bookings
+
+Navigation Patterns:
+- context.go()   -> Replace entire stack
+- context.push() -> Add to stack
+- context.pop()  -> Go back
+
+Back Button Handling:
+- Checks canPop() before popping
+- Falls back to dashboard if stack is empty
+
+
+7. SCALING FOR PRODUCTION
+================================================================================
+
+To scale this app for production, I would:
+
+a) Backend Integration:
+   - Replace local datasources with API clients
+   - Implement proper authentication (JWT/OAuth)
+   - Add refresh token handling
+   - Implement proper error codes from backend
+
+b) State Management Enhancements:
+   - Add offline-first capability with sync
+   - Implement optimistic updates
+   - Add retry mechanisms for failed requests
+   - Cache API responses with expiration
+
+c) Security:
+   - Secure storage for tokens (flutter_secure_storage)
+   - Certificate pinning for API calls
+   - Input sanitization
+   - Biometric authentication option
+
+d) Performance:
+   - Implement pagination for room listings
+   - Lazy loading for images
+   - Background data sync
+   - Reduce widget rebuilds with selective watching
+
+e) Testing:
+   - Unit tests for business logic
+   - Widget tests for UI components
+   - Integration tests for user flows
+   - Mock providers for testing
+
+f) Monitoring:
+   - Crash reporting (Firebase Crashlytics)
+   - Analytics for user behavior
+   - Performance monitoring
+   - Error logging
+
+
+8. KEY DESIGN DECISIONS
+================================================================================
+
+a) Feature-based Structure:
+   - Easier to maintain and scale
+   - Clear boundaries between features
+   - Can be worked on independently
+
+b) Repository Pattern:
+   - Abstracts data source from business logic
+   - Easy to swap implementations (local/remote)
+   - Single source of truth for data
+
+c) Riverpod over other solutions:
+   - Better compile-time safety than Provider
+   - Simpler than Bloc for this scale
+   - Great async support built-in
+
+d) Hive for Local Storage:
+   - Fast and lightweight
+   - No native dependencies
+   - Type-safe with adapters
+
+e) go_router for Navigation:
+   - Declarative routing
+   - Deep linking support
+   - Type-safe route parameters
+
+f) Extracted Widgets:
+   - Reduced code duplication
+   - Consistent UI across screens
+   - Easier maintenance
+
+================================================================================
+                                    END
+================================================================================

@@ -1,0 +1,76 @@
+{
+  "rooms": [
+    {
+      "id": "room_001",
+      "name": "Cozy Standard Room",
+      "description": "A comfortable standard room perfect for solo travelers or couples. Features a queen-sized bed, work desk, and city view. The room comes with complimentary Wi-Fi, flat-screen TV, and a modern en-suite bathroom.",
+      "pricePerNight": 99.99,
+      "imageUrl": "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800&q=80",
+      "capacity": 2,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Mini Bar", "Room Service"],
+      "type": "standard",
+      "rating": 4.3,
+      "reviewCount": 128
+    },
+    {
+      "id": "room_002",
+      "name": "Deluxe Ocean View",
+      "description": "Spacious deluxe room with stunning ocean views. Includes a king-sized bed, sitting area, and premium amenities. Wake up to breathtaking sunrises and enjoy the private balcony overlooking the sea.",
+      "pricePerNight": 179.99,
+      "imageUrl": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80",
+      "capacity": 2,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Mini Bar", "Ocean View", "Balcony", "Breakfast"],
+      "type": "deluxe",
+      "rating": 4.7,
+      "reviewCount": 256
+    },
+    {
+      "id": "room_003",
+      "name": "Family Suite",
+      "description": "Perfect for families, this suite offers two bedrooms, a living area, and kid-friendly amenities. The spacious layout ensures everyone has their own space while staying connected.",
+      "pricePerNight": 299.99,
+      "imageUrl": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80",
+      "capacity": 4,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Mini Bar", "Kitchen", "Living Room", "Washer"],
+      "type": "suite",
+      "rating": 4.8,
+      "reviewCount": 89
+    },
+    {
+      "id": "room_004",
+      "name": "Presidential Suite",
+      "description": "The ultimate luxury experience. Features panoramic views, private butler service, and exclusive amenities. This suite spans an entire floor and includes a private dining room, spa bathroom, and premium entertainment system.",
+      "pricePerNight": 599.99,
+      "imageUrl": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
+      "capacity": 4,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Mini Bar", "Kitchen", "Living Room", "Private Pool", "Butler Service", "Spa"],
+      "type": "presidential",
+      "rating": 4.9,
+      "reviewCount": 42
+    },
+    {
+      "id": "room_005",
+      "name": "Garden View Standard",
+      "description": "A peaceful retreat with beautiful garden views. This room offers tranquility with modern comforts, including a comfortable queen bed and a private terrace overlooking our landscaped gardens.",
+      "pricePerNight": 119.99,
+      "imageUrl": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800&q=80",
+      "capacity": 2,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Garden View", "Terrace", "Coffee Maker"],
+      "type": "standard",
+      "rating": 4.4,
+      "reviewCount": 167
+    },
+    {
+      "id": "room_006",
+      "name": "Executive Deluxe",
+      "description": "Designed for business travelers, this room features a dedicated workspace, high-speed internet, and premium business amenities. Includes access to the executive lounge and complimentary pressing service.",
+      "pricePerNight": 199.99,
+      "imageUrl": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80",
+      "capacity": 2,
+      "amenities": ["WiFi", "TV", "Air Conditioning", "Work Desk", "Executive Lounge", "Pressing Service", "Mini Bar"],
+      "type": "deluxe",
+      "rating": 4.6,
+      "reviewCount": 203
+    }
+  ]
+}
