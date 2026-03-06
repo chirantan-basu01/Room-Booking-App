@@ -240,24 +240,29 @@ class _BookingConfirmationScreenState
                   ),
                 ),
               ],
-              const SizedBox(height: 100),
+              const SizedBox(height: 140),
             ],
           ),
         ),
       ),
-      bottomSheet: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.background,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, -4),
-            ),
-          ],
-        ),
-        child: SafeArea(
+      bottomSheet: Builder(
+        builder: (context) => Container(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            20 + MediaQuery.of(context).padding.bottom,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.background,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
           child: GradientButton(
             text: 'Confirm Booking',
             width: double.infinity,

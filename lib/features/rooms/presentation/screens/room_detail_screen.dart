@@ -260,7 +260,7 @@ class RoomDetailScreen extends ConsumerWidget {
                               );
                             }).toList(),
                           ),
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 140),
                   ],
                 ),
               ),
@@ -276,7 +276,12 @@ class RoomDetailScreen extends ConsumerWidget {
       ),
       bottomSheet: roomAsync.whenOrNull(
         data: (room) => Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            20 + MediaQuery.of(context).padding.bottom,
+          ),
           decoration: BoxDecoration(
             color: AppColors.background,
             boxShadow: [
@@ -287,15 +292,13 @@ class RoomDetailScreen extends ConsumerWidget {
               ),
             ],
           ),
-          child: SafeArea(
-            child: GradientButton(
-              text: 'Book Now',
-              width: double.infinity,
-              onPressed: () {
-                ref.read(bookingFormProvider.notifier).setRoom(room);
-                context.push('/booking/confirm');
-              },
-            ),
+          child: GradientButton(
+            text: 'Book Now',
+            width: double.infinity,
+            onPressed: () {
+              ref.read(bookingFormProvider.notifier).setRoom(room);
+              context.push('/booking/confirm');
+            },
           ),
         ),
       ),
