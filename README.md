@@ -12,13 +12,24 @@ A Flutter mobile application for browsing and booking hotel rooms. Built with cl
 
 ## Screenshots
 
-The app includes the following screens:
-- Splash Screen
-- Login Screen
-- Dashboard (Room Listing)
-- Room Detail
-- Booking Confirmation
-- My Bookings
+<p align="center">
+  <img src="screenshots/login_screen.png" width="200" alt="Login Screen"/>
+  <img src="screenshots/home_screen.png" width="200" alt="Home Screen"/>
+  <img src="screenshots/booking_details_screen.png" width="200" alt="Room Details"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/confirm_screen.png" width="200" alt="Booking Confirmation"/>
+  <img src="screenshots/my_bookings_screen.png" width="200" alt="My Bookings"/>
+</p>
+
+| Screen | Description |
+|--------|-------------|
+| **Login** | Mock authentication with demo credentials |
+| **Home** | Room listing with search and filter options |
+| **Room Details** | Detailed view with amenities and pricing |
+| **Confirmation** | Date selection and booking summary |
+| **My Bookings** | View and manage your bookings |
 
 ## Tech Stack
 
